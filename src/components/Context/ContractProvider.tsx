@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import abi from './ContractA_ABI.json';
 import { ethers } from 'ethers';
+import { PlayerData } from '../Player';
 
 // Define the shape of the context's value
 interface IContractContext {
@@ -10,6 +11,8 @@ interface IContractContext {
   contract: ethers.Contract | null;
   contractABI: typeof abi;
   contractAddress: string;
+  player: PlayerData;
+  setPlayer: (newPlayer: PlayerData) => void;
   setProvider: (newProvider: ethers.BrowserProvider | null) => void;
   setContract: (newContract: ethers.Contract | null) => void;
   isRegistered: boolean;
@@ -29,10 +32,12 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [phase, setPhase] = useState<string>('wolves_vote'); // initial phase
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
+  const [currentPhaseIndex, setCurrentPhaseIndex] = useState<number>(0);
+  const [player, setPlayer] = useState<PlayerData>({} as PlayerData);
 
   // Define your ABI and Contract Address here
   const contractABI = abi;
-  const contractAddress = "0x027fBDb38DEF8341C343169545b47a12eC96CD4C";
+  const contractAddress = "0x030789279833845e2D706851F6769883862211D8";
 
   // Function to update the provider in the context
   const updateProvider = (newProvider: ethers.BrowserProvider | null) => {
@@ -48,24 +53,29 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
     setIsRegistered(value);
   }
 
+  const updatePlayer = (newPlayer: PlayerData) => {
+    setPlayer(newPlayer);
+  }
+
   type PhaseDurations = {
-    [key in 'wolves_vote' | 'village_debate' | 'village_vote']: number;
+    [key in 'wolves_vote' | 'break1' | 'village_debate' | 'break2' | 'village_vote']: number;
   };
 
   useEffect(() => {
     if (isRegistered) {
       const phaseDuration: PhaseDurations = {
         'wolves_vote': 2 * 60 * 1000, // 2 minutes
-        'village_debate': 5 * 60 * 1000, // 5 minutes
+        'break1': 30 * 1000,
+        'village_debate': 1 * 60 * 1000, // 5 minutes
         'village_vote': 2 * 60 * 1000, // 2 minutes
+        'break2': 30 * 1000,
       };
 
-      const phases = ['wolves_vote', 'village_debate', 'village_vote'];
-      let currentPhaseIndex = 0;
+      const phases = ['wolves_vote', 'break1', 'village_debate', 'village_vote', 'break2'];
 
       const nextPhase = () => {
-        currentPhaseIndex = (currentPhaseIndex + 1) % phases.length;
-        setPhase(phases[currentPhaseIndex]);
+        setCurrentPhaseIndex((currentPhaseIndex + 1) % phases.length);
+        setPhase(phases[(currentPhaseIndex + 1) % phases.length]);
       };
 
       // Set initial timeout for the first phase
@@ -84,6 +94,8 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
         contract,
         contractABI,
         contractAddress,
+        player,
+        setPlayer: updatePlayer,
         setProvider: updateProvider,
         setContract: updateContract,
         isRegistered,

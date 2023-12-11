@@ -1,0 +1,16 @@
+  .App {
+    background-image: url('night_background.png'); /* Replace with the path to your image */
+    background-size: cover; /* or 'cover' if the image resolution is high enough */
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 100vh; /* Ensure it covers the full viewport height */
+    min-width: 100vw; /* Ensure it covers the full viewport width */
+    color: #fff; /* Set text color to white or another color that contrasts well with your background */
+    overflow: hidden; /* Add this to prevent scroll if the image is too large */
+  }
+  
+  /* If any of the components has its own background, you might need to override it: */
+  .StatusBar, .Player, .PlayerList {
+    background: none; /* Remove any existing background */
+    /* Other styles specific to the component */
+  }

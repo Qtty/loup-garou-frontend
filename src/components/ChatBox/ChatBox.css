@@ -1,34 +1,72 @@
 .chat-box {
-    max-width: 400px;
-    margin: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
-  }
-  
-  .messages {
-    height: 300px;
-    overflow-y: auto;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
-  }
-  
-  .message {
-    background-color: #f1f1f1;
-    padding: 5px 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-  }
-  
-  .message-form {
-    display: flex;
-  }
-  
-  .message-form input {
-    flex-grow: 1;
-    padding: 10px;
-  }
-  
-  .message-form button {
-    padding: 10px;
-  }
-  
+  position: fixed;
+  right: 0;
+  width: 300px;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.box {
+  position: relative;
+  top: 11px;
+  bottom: 5px;
+  border: 1px solid #ffffff; 
+  box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.5); 
+  background: url('chat_background.png') no-repeat center center; 
+  background-size: cover; 
+  height: 100%; /* Make sure .box takes full height of its parent */
+}
+
+.box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Adjust the transparency as needed */
+  z-index: 0; /* Directly above the background image */
+}
+
+.messages {
+  position: relative;
+  z-index: 2; /* Above the ::before overlay */
+  overflow-y: auto;
+  height: calc(100% - 76px); /* Leave space for the message input box */
+  padding: 10px; /* Add padding for visual spacing */
+  background: rgba(255, 255, 255, 0.1); /* Slight white tint for readability */
+}
+
+.message-form {
+  position: relative;
+  z-index: 3; /* Ensure it's above the messages and the overlay */
+  display: flex;
+  border-top: 1px solid #ffffff;
+  background: rgba(255, 255, 255, 0.8); /* Slightly transparent background for the input box */
+  padding: 10px; /* Padding inside the message form */
+}
+
+/* Input field styling */
+.message-form .input {
+  flex-grow: 1;
+  border: none;
+  border-radius: 0;
+  padding: 5px 10px; /* Padding for the input field */
+  margin-right: 5px; /* Space between the input field and the button */
+}
+
+/* Send button styling */
+.message-form .button {
+  border: none;
+  border-radius: 0;
+  padding: 5px 10px; /* Padding for the button */
+}
+
+.button.is-info {
+  background: #645252; /* Color adjusted to match the theme */
+  color: #fff; /* White text color for better readability */
+}
+
+.button.is-info:hover {
+  background: #513e3e; /* Darker background on hover */
+}

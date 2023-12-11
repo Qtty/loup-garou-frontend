@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useContract } from '../Context/ContractProvider';
 
 const StatusBar: React.FC = () => {
-  const { phase } = useContract(); // Assuming phase is part of your context
+  const { phase, player } = useContract(); // Assuming phase is part of your context
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
   // Define the duration for each phase
   const phaseDurations: { [key: string]: number } = {
     'wolves_vote': 2 * 60, // 2 minutes in seconds
-    'village_debate': 5 * 60, // 5 minutes in seconds
+    'break1': 30,
+    'village_debate': 1 * 60, // 5 minutes in seconds
     'village_vote': 2 * 60, // 2 minutes in seconds
+    'break2': 30,
   };
 
   // Function to format the time left as mm:ss
@@ -33,9 +35,18 @@ const StatusBar: React.FC = () => {
   }, [phase]);
 
   return (
-    <div className="status-bar">
-      <p>Current Phase: {phase}</p>
-      <p>Time Left: {formatTimeLeft(timeLeft)}</p>
+    <div className="status-bar has-background-dark has-text-light" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 10 }}>
+      <div className="container">
+        <div className="level is-mobile is-justify-content-space-between">
+          <div className="level-left">
+            <p className="level-item">Current Phase: {phase}</p>
+          </div>
+          <p className="level-item has-text-centered">Time Left: {formatTimeLeft(timeLeft)}</p>
+          <div className="level-right">
+            <p className="level-item">Role: {player.role}</p> {/* Replace {playerAddress} with your actual data */}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

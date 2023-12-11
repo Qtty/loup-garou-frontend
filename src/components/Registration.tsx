@@ -4,6 +4,8 @@ import { BrowserProvider, Contract } from "ethers";
 import React, { useState, useEffect } from "react";
 import { createFhevmInstance } from "../fhevmjs";
 import { PlayerData } from "./Player";
+import './Registration.css';
+
 
 // Define the shape of props expected by the Registration component
 interface RegistrationProps {
@@ -38,7 +40,7 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
     };
 
     fetchPlayerCount();
-    const intervalId = setInterval(fetchPlayerCount, 5000);
+    const intervalId = setInterval(fetchPlayerCount, 1000);
 
     return () => clearInterval(intervalId);
   }, [contract, isLoading]);
@@ -63,6 +65,7 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
           address: await signer.getAddress(),
           role: "",
           status: true,
+          id: 0
         };
 
         updatePlayer(playerData);
@@ -76,13 +79,26 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
   };
 
   return (
-    <div>
-      {isLoading ? (
-        <div className="loading">Loading... {playersLeft !== null ? `${playersLeft} players left to register.` : ''}</div>
-      ) : (
-        <button onClick={handleRegistration}>Register for Game</button>
-      )}
+    <div className="registration-background">
+      <div className="container registration-box">
+        {isLoading ? (
+          <div className="loading">
+            Loading, {playersLeft !== null ? `${playersLeft} players left to register` : ''}
+          </div>
+        ) : (
+          <section className="hero is-fullheight">
+            <div className="hero-body">
+              <div className="container has-text-centered">
+                <button className="button is-register" onClick={handleRegistration}>
+                  Register for Game
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
     </div>
+
   );
 };
 

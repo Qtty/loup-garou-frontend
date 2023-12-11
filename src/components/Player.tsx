@@ -14,6 +14,7 @@ export interface PlayerData {
   address: string;
   role: string;
   status: boolean;
+  id: number;
 }
 
 type RoleDictionary = {
@@ -30,7 +31,7 @@ const Player: React.FC<PlayerProps> = ({ initialAddress, initialRole = '', initi
   const [address, setAddress] = useState<string>(initialAddress);
   const [role, setRole] = useState<string | undefined>(initialRole); // role can be string or undefined
   const [status, setStatus] = useState<boolean>(initialStatus);
-  const { provider, contract, contractABI, contractAddress, setProvider, setContract } = useContract();
+  const { contract, contractAddress, setPlayer } = useContract();
 
   useEffect(() => {
     const getRole = async () => {
@@ -43,6 +44,13 @@ const Player: React.FC<PlayerProps> = ({ initialAddress, initialRole = '', initi
           var plainRole = getInstance().decrypt(contractAddress, fetchedRole);
           setRole(roles[plainRole]);
           console.log(`player role: ${role}`);
+          const player: PlayerData = {
+            address: address,
+            role: roles[plainRole],
+            status: status,
+            id: 0,
+          }
+          setPlayer(player);
         } catch (error) {
           console.error("Error fetching player role:", error);
         }
@@ -50,15 +58,11 @@ const Player: React.FC<PlayerProps> = ({ initialAddress, initialRole = '', initi
     };
 
     getRole();
-    const intervalId = setInterval(getRole, 5000);
-    return () => clearInterval(intervalId);
-  }, [contract, address, contractAddress, role]); // Dependencies array should include all values from the component scope used in the effect
+  }); // Dependencies array should include all values from the component scope used in the effect
 
   return (
     <div className="player">
-      <p>Address: {address}</p>
       <p>Role: {role || "Waiting for role"}</p>
-      <p>Status: {status ? "Alive :)" : "Dead :("}</p>
       {/* Interactive elements here */}
     </div>
   );

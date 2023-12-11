@@ -1,5 +1,6 @@
 // Assuming ContractA's ABI and address are available
 import { ContractProvider } from "./Context/ContractProvider";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Player, { PlayerData } from "./Player";
 import Registration from "./Registration";
 import { useState, useEffect } from "react";
@@ -7,6 +8,8 @@ import { init } from "../fhevmjs";
 import PlayerList from "./PlayerList/PlayerList";
 import ChatBox from "./ChatBox/ChatBox";
 import StatusBar from "./StatusBar/StatusBar";
+import GameOver from "./GameOver/GameOver"; 
+import "./App.css";
 
 
 const App = () => {
@@ -29,18 +32,25 @@ const App = () => {
 
   return (
     <ContractProvider>
+      <Router>
       <div className="App">
-        {registered ? (
-          <>
-            <StatusBar/>
-            <Player initialAddress={player.address} initialRole={player.role} initialStatus={player.status} />
-            <PlayerList/>
-            <ChatBox playerAddress={player.address} />
-          </>
-        ) : (
-          <Registration updatePlayer={updatePlayer} updateRegistration={updateRegistration} />
-        )}
+        <Routes>
+        <Route path="/" element={
+              registered ? (
+                <>
+                  <StatusBar/>
+                  <Player initialAddress={player.address} initialRole={player.role} initialStatus={player.status} />
+                  <PlayerList/>
+                  <ChatBox playerAddress={player.address} />
+                </>
+              ) : (
+                <Registration updatePlayer={updatePlayer} updateRegistration={updateRegistration} />
+              )
+            } />
+          <Route path="/game-over" element={<GameOver />} />
+        </Routes>
       </div>
+      </Router>
     </ContractProvider>
   );
 };

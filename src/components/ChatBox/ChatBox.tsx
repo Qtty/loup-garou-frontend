@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import "./ChatBox.css";
 
 
 // Define the shape of the props using an interface
@@ -104,24 +105,32 @@ const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
   };
 
   return (
-    <div className="chat-box">
-      <div className="messages">
-        {messages.map((message, index) => (
-          <div key={index} className="message">
-            <strong>{message.sender}:</strong> {message.message}
-          </div>
-        ))}
-      </div>
-      <form className="message-form" onSubmit={handleSendMessage}>
+    <div className="chat-box column is-one-quarter" style={{ height: '100vh', position: 'fixed', right: 0, top: 0, }}>
+  <div className="box" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div className="messages" style={{ overflowY: 'auto', flexGrow: 1 }}>
+      {messages.map((message, index) => (
+        <div key={index} className="message has-background-grey-lighter">
+          <strong>{message.sender}:</strong> {message.message}
+        </div>
+      ))}
+    </div>
+    <div className="field has-addons">
+      <div className="control is-expanded">
         <input
+          className="input"
           type="text"
           value={newMessage}
           onChange={handleNewMessageChange}
           placeholder="Type a message..."
         />
-        <button type="submit">Send</button>
-      </form>
+      </div>
+      <div className="control">
+        <button className="button is-info" onClick={handleSendMessage}>Send</button>
+      </div>
     </div>
+  </div>
+</div>
+
   );
 };
 

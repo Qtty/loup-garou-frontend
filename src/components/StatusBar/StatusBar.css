@@ -1,0 +1,21 @@
+.status-bar {
+    padding: 10px 0; /* Adjust padding to your preference */
+  }
+  
+  .level-item {
+    flex-grow: 1; /* Allow each item to grow */
+  }
+  
+  /* Since Bulma's level layout evenly spaces items, additional tweaks might be needed for exact alignment */
+  .level-item:first-child {
+    justify-content: flex-start;
+  }
+  
+  .level-item:last-child {
+    justify-content: flex-end;
+  }
+  
+  .level-item:not(:first-child):not(:last-child) {
+    justify-content: center;
+  }
+  
