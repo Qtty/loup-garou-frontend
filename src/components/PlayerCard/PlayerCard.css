@@ -1,0 +1,33 @@
+  .PlayerCard {
+    cursor: pointer;
+    width: 200px; /* Or the width you prefer */
+    height: 240px; /* Or the height you prefer */
+    background: url('card.png') no-repeat center center;
+    background-size: cover;
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 8px; /* Gives the card rounded corners */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for hover effects */
+  }
+  
+  .PlayerCard:hover {
+    transform: translateY(-5px); /* Lift the card up slightly on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+  }
+  
+  .PlayerCard.Alive {
+    border: 2px solid #009688; /* Teal border for alive players */
+  }
+  
+  .PlayerCard.Dead {
+    border: 2px solid #f44336; /* Red border for dead players */
+    opacity: 0.5; /* Fade out dead players */
+  }
+  
+  /* Adjust this path to the location of your image */
+  .PlayerCard .card-content {
+    background-image: url('card.png');
+  }
+  

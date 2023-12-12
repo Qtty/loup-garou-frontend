@@ -3,6 +3,7 @@ import "./PlayerCard.css";
 import { useContract } from '../Context/ContractProvider';
 import { getInstance } from '../../fhevmjs';
 import { FhevmInstance } from 'fhevmjs';
+import "./PlayerCard.css";
 
 interface PlayerCardProps {
   address: string;  // Assuming this represents the player's ID
@@ -13,9 +14,10 @@ interface PlayerCardProps {
 const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
   const { contract, phase, player } = useContract();
   const [ hasVoted, setHasVoted ] = useState<boolean>(false);
+  const gasLimit = 4000000;
 
   const handleDailyDebateVote = async () => {
-    if (contract && id) {
+    if (contract) {
       try {
         // Call the dailyDebate method of your contract
         await contract.dailyDebate(id);
@@ -27,11 +29,12 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
   };
 
   const handleWolvesNightVote = async () => {
-    if (contract && id) {
+    if (contract) {
       try {
         let instance: FhevmInstance =  getInstance();
+
         // Call the wolves_night method of your contract
-        await contract.wolvesNight(instance.encrypt8(id));
+        await contract.wolvesNight(instance.encrypt8(id), { gasLimit: gasLimit });
         console.log(`Voted in wolves night for: ${id}`);
       } catch (error) {
         console.error('Error in wolves night voting:', error);
@@ -61,7 +64,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
       try {
         let instance: FhevmInstance = getInstance();
         // Automatically vote for player ID 0
-        await contract.wolvesNight(instance.encrypt8(0));
+        await contract.wolvesNight(instance.encrypt8(0), { gasLimit: gasLimit });
         console.log('Automatic vote in wolves night for ID 0.');
         setHasVoted(true);
       } catch (error) {
@@ -82,11 +85,11 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
   return (
     <>
       <div
-        className={`PlayerCard ${status ? "Alive" : "Dead"}`}
+        className={`PlayerCard`}
         onClick={handleClick} // Assuming daily debate vote is for all players
       >
-        <p>{address} - {status ? "Alive" : "Dead"}</p>
       </div>
+      <p>{address.slice(0, 10)}</p>
       <div className="auto vote"
         onClick={autoVoteForWolvesNight} // Assuming daily debate vote is for all players
       >

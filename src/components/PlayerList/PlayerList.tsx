@@ -4,6 +4,7 @@ import "./PlayerList.css";
 import { useContract } from '../Context/ContractProvider';
 import {PlayerData} from '../Player';
 import { useNavigate } from 'react-router-dom';
+import "./PlayerList.css";
 
 
 const PlayerList: React.FC = () => {
@@ -45,15 +46,35 @@ const PlayerList: React.FC = () => {
       const killedPlayerAddress = await contract.gotKilled();
       
       // Navigate to Game Over page if the killed player is the current player
-      //if (killedPlayerAddress === player.address) {
-      //  navigate('/game-over'); // Adjust the path as per your routing setup
-      //}
+      if (killedPlayerAddress === player.address) {
+        navigate('/game-over'); // Adjust the path as per your routing setup
+      }
 
       // Filter out the killed player
       setPlayers(prevPlayers => prevPlayers.filter(participant => participant.address !== killedPlayerAddress));
       console.log('got killed: ' + killedPlayerAddress);
+      await gameEnded();
     } catch (error) {
       console.error('Error removing killed player:', error);
+    }
+  };
+
+  const gameEnded = async () => {
+    if (!contract) return;
+
+    try {
+      const villagersWon = await contract.villagers_win();
+      if (villagersWon == true) {
+        navigate("/villagers-win");
+      }
+
+      const wolvesWon = await contract.wolves_win();
+      if (wolvesWon == true) {
+        navigate("/wolves-win");
+      }
+
+    } catch (error) {
+      console.error("Error getting game end status");
     }
   };
 
@@ -71,10 +92,16 @@ const PlayerList: React.FC = () => {
   }, [contract, player]); // Re-run the effect if the contract instance changes
 
   return (
-    <div className="PlayerList">
-      {players.map((participant, index) => (
-        <PlayerCard key={index} address={participant.address} status={participant.status} id={participant.id}/>
-      ))}
+    <div className="section">
+      <div className="container">
+        <div className="columns is-centered is-multiline">
+          {players.map((participant, index) => (
+            <div className="column is-narrow" key={index}>
+              <PlayerCard address={participant.address} status={participant.status} id={participant.id}/>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

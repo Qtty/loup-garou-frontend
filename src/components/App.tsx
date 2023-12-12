@@ -8,7 +8,9 @@ import { init } from "../fhevmjs";
 import PlayerList from "./PlayerList/PlayerList";
 import ChatBox from "./ChatBox/ChatBox";
 import StatusBar from "./StatusBar/StatusBar";
-import GameOver from "./GameOver/GameOver"; 
+import GameOver from "./GameEnd/GameOver"; 
+import WolvesWin from "./GameEnd/WolvesWin";
+import VillagersWin from "./GameEnd/VillagersWin";
 import "./App.css";
 
 
@@ -48,6 +50,8 @@ const App = () => {
               )
             } />
           <Route path="/game-over" element={<GameOver />} />
+          <Route path="/wolves-win" element={<WolvesWin/>} />
+          <Route path="/villagers-win" element={<VillagersWin/>} />
         </Routes>
       </div>
       </Router>
@@ -56,3 +60,8 @@ const App = () => {
 };
 
 export default App;
+
+// TODO: 
+// * Add "Waiting for transaction" message in registration
+// * auto vote
+// * Add "0xfff died" after each vote

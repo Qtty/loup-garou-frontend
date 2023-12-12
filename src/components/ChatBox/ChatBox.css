@@ -37,6 +37,16 @@
   background: rgba(255, 255, 255, 0.1); /* Slight white tint for readability */
 }
 
+.message {
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+  color: #ffffff; /* White text for readability */
+  margin-bottom: 10px; /* Space between messages */
+  padding: 8px; /* Padding inside each message */
+  border-radius: 4px; /* Slightly rounded corners for a softer look */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border to define the edges */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
+}
+
 .message-form {
   position: relative;
   z-index: 3; /* Ensure it's above the messages and the overlay */

@@ -37,7 +37,7 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
 
   // Define your ABI and Contract Address here
   const contractABI = abi;
-  const contractAddress = "0x030789279833845e2D706851F6769883862211D8";
+  const contractAddress = "0xffaBD3c8502626A63a4A49C661E9B4659F0bBE70";
 
   // Function to update the provider in the context
   const updateProvider = (newProvider: ethers.BrowserProvider | null) => {

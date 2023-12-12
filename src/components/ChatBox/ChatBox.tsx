@@ -23,7 +23,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
   // Function to send a message
   const sendMessage = async (messageText: string): Promise<void> => {
     try {
-      const response = await fetch('http://localhost:5000/send_message', {
+      const response = await fetch('http://192.168.1.6:5000/send_message', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
   // Function to fetch messages
   const fetchMessages = async () => {
     try {
-      const response = await fetch('http://localhost:5000/get_messages', {
+      const response = await fetch('http://192.168.1.6:5000/get_messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,8 +109,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
   <div className="box" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
     <div className="messages" style={{ overflowY: 'auto', flexGrow: 1 }}>
       {messages.map((message, index) => (
-        <div key={index} className="message has-background-grey-lighter">
-          <strong>{message.sender}:</strong> {message.message}
+        <div key={index} className="message">
+          <strong>{message.sender.slice(0, 10)}:</strong> {message.message}
         </div>
       ))}
     </div>

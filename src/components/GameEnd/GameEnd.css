@@ -1,0 +1,21 @@
+/* Custom styles for the win/lose message */
+.win-lose-message {
+    color: #f8f8f2; /* Light color for the text */
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background for the text */
+    border: 2px solid #ffffff; /* White border around the text */
+    padding: 1rem; /* Padding inside the border */
+    border-radius: 10px; /* Rounded corners for the border */
+    display: inline-block; /* Makes the container fit the content width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+    text-shadow: none; /* Remove text shadow if any */
+  }
+  
+  /* Additional styling to apply for different roles */
+  .lost-message {
+    border-color: #f44336; /* Red border for wolves */
+  }
+  
+  .win-message {
+    border-color: #4caf50; /* Green border for villagers */
+  }
+  
