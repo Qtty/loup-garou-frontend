@@ -15,6 +15,7 @@ interface RegistrationProps {
 
 const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updatePlayer }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isWaitingForTx, setIsWaitingForTx] = useState(false);
   const [playersLeft, setPlayersLeft] = useState<number | null>(null);
 
   const { contract, contractABI, contractAddress, setProvider, setContract, setIsRegistered } = useContract();
@@ -57,9 +58,11 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
         setContract(newContract);
 
         const tx = await newContract.registerForGame();
+        setIsWaitingForTx(true);
         console.log("Transaction sent:", tx.hash);
         await tx.wait();
         console.log("Registered for game");
+        setIsWaitingForTx(false);
 
         const playerData: PlayerData = {
           address: await signer.getAddress(),
@@ -81,17 +84,19 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
   return (
     <div className="registration-background">
       <div className="container registration-box">
-        {isLoading ? (
-          <div className="loading">
-            Loading, {playersLeft !== null ? `${playersLeft} players left to register` : ''}
+        {isWaitingForTx ? (
+          <div className="notification">
+            Waiting for transaction...
           </div>
         ) : (
           <section className="hero is-fullheight">
             <div className="hero-body">
               <div className="container has-text-centered">
-                <button className="button is-register" onClick={handleRegistration}>
-                  Register for Game
-                </button>
+                {isLoading ? (
+                  <div className="loading">Loading... {playersLeft !== null ? `${playersLeft} players left to register` : ''}</div>
+                ): <button className="button is-register" onClick={handleRegistration}>
+                Register for Game
+              </button>}
               </div>
             </div>
           </section>

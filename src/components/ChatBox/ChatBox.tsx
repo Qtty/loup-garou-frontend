@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./ChatBox.css";
+import { sendMessageUtil } from './sendMessage';
 
 
 // Define the shape of the props using an interface
@@ -17,40 +18,15 @@ interface Message {
 const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
-  const [address, setAddress] = useState<string>(playerAddress); // Replace with actual player address
+  const [address] = useState<string>(playerAddress); // Replace with actual player address
   const chatId = '1341';
+  const api = "http://192.168.163.161:5000";
 
-  // Function to send a message
-  const sendMessage = async (messageText: string): Promise<void> => {
-    try {
-      const response = await fetch('http://192.168.1.6:5000/send_message', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-         },
-        mode: 'cors',
-        body: JSON.stringify({
-          chat_id: chatId,
-          name: address,
-          message: messageText,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      console.log('Message sent successfully');
-    } catch (error) {
-      console.error('Failed to send message:', error);
-    }
-  };
 
   // Function to fetch messages
   const fetchMessages = async () => {
     try {
-      const response = await fetch('http://192.168.1.6:5000/get_messages', {
+      const response = await fetch(`${api}/get_messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +76,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
     event.preventDefault();
     if (!newMessage.trim()) return;
 
-    await sendMessage(newMessage);
+    await sendMessageUtil(chatId, address, newMessage);
     setNewMessage('');
   };
 

@@ -33,7 +33,7 @@
     border-color: #333; /* Darker border for active/focused state */
   }
   
-  .loading {
+  .loading, .notification{
     color: #ccc; /* Light grey color for visibility */
     font-size: 1.5rem; /* Larger font size for readability */
     text-align: center; /* Center the text horizontally */
@@ -44,8 +44,18 @@
     width: fit-content; /* Fit the content width */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Soft shadow for depth */
     transition: all 0.3s ease; /* Smooth transition for any changes */
+    animation: pulse 1.5s infinite ease-in-out; /* Pulse animation for the loading state */
+    font-size: 1.5rem; /* Slightly larger font size for visibility */
   }
-  
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
   /* If you want to animate the loading text */
   .loading::after {
     content: '.';

@@ -9,6 +9,8 @@ import "./PlayerList.css";
 
 const PlayerList: React.FC = () => {
   const [players, setPlayers] = useState<PlayerData[]>([]);
+  const [playerDiedNotification, setPlayerDiedNotification] = useState('');
+  const [showPlayerDied, setShowPlayerDied] = useState(false);
   const { contract, phase, player } = useContract();
   const navigate = useNavigate(); // Hook for navigation
 
@@ -37,6 +39,13 @@ const PlayerList: React.FC = () => {
       console.error('Error fetching registered players:', error);
     }
   };
+
+  const onPlayerDeath = () => {
+    setShowPlayerDied(true);
+    setTimeout(() => {
+      setShowPlayerDied(false);
+    }, 20000); // Hide the notification after 10 seconds
+  };
   
   const removeKilledPlayer = async () => {
     if (!contract) return;
@@ -50,10 +59,17 @@ const PlayerList: React.FC = () => {
         navigate('/game-over'); // Adjust the path as per your routing setup
       }
 
-      // Filter out the killed player
-      setPlayers(prevPlayers => prevPlayers.filter(participant => participant.address !== killedPlayerAddress));
+      if (killedPlayerAddress == "0x0000000000000000000000000000000000000000") {
+        setPlayerDiedNotification(`No one died: Tie`);
+      } else {
+        // Filter out the killed player
+        setPlayers(prevPlayers => prevPlayers.filter(participant => participant.address !== killedPlayerAddress));
+        setPlayerDiedNotification(`Player died: ${killedPlayerAddress}`);
+      }
+
       console.log('got killed: ' + killedPlayerAddress);
-      await gameEnded();
+      onPlayerDeath();
+      //await gameEnded();
     } catch (error) {
       console.error('Error removing killed player:', error);
     }
@@ -86,13 +102,18 @@ const PlayerList: React.FC = () => {
     }
   }, [phase]);
 
-  // TODO: update the players list based on the phase, once if it's wolves night and once if it's village debate, or add breaks between phases
   useEffect(() => {
     fetchRegisteredPlayers();
   }, [contract, player]); // Re-run the effect if the contract instance changes
 
   return (
-    <div className="section">
+    <>
+    {showPlayerDied && (
+      <div className="player-died-notification">
+        {playerDiedNotification}
+      </div>
+    )}
+    {player.role && (<div className="section">
       <div className="container">
         <div className="columns is-centered is-multiline">
           {players.map((participant, index) => (
@@ -102,7 +123,8 @@ const PlayerList: React.FC = () => {
           ))}
         </div>
       </div>
-    </div>
+    </div>)}
+    </>
   );
 }
 

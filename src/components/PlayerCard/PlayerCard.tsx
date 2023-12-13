@@ -3,6 +3,7 @@ import "./PlayerCard.css";
 import { useContract } from '../Context/ContractProvider';
 import { getInstance } from '../../fhevmjs';
 import { FhevmInstance } from 'fhevmjs';
+import { sendMessageUtil } from "../ChatBox/sendMessage";
 import "./PlayerCard.css";
 
 interface PlayerCardProps {
@@ -22,6 +23,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
         // Call the dailyDebate method of your contract
         await contract.dailyDebate(id);
         console.log(`Voted in daily debate for: ${id}`);
+        await sendMessageUtil("1341", player.address, `Voted in daily debate for ${address.slice(0, 10)}`);
       } catch (error) {
         console.error('Error in dailyDebate voting:', error);
       }
@@ -43,21 +45,16 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
   };
 
   useEffect(() => {
-    // Reset hasVoted when the phase changes
-    setHasVoted(false);
-  }, [phase]);
+    if (player.role != undefined && !hasVoted) {
+      setHasVoted(true);
+      let isWolf = (player.role == "wolf");
+      // If the phase is wolves_vote and the player is not a wolf and hasn't voted yet, vote automatically
+      if (phase === 'wolves_vote' && !isWolf) {
+        autoVoteForWolvesNight();
+      }
+    }
 
-  //useEffect(() => {
-  //  if (player.role) {
-  //    let isWolf = player.role == "wolf";
-  //    // If the phase is wolves_vote and the player is not a wolf and hasn't voted yet, vote automatically
-  //    if (phase === 'wolves_vote' && !isWolf && !hasVoted) {
-  //      autoVoteForWolvesNight();
-  //      setHasVoted(true); // Set hasVoted to true to prevent further votes this phase
-  //    }
-  //  }
-//
-  //}, [phase, player.role, hasVoted]);
+  }, [phase]);
 
   const autoVoteForWolvesNight = async () => {
     if (contract && !hasVoted) {
@@ -66,7 +63,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
         // Automatically vote for player ID 0
         await contract.wolvesNight(instance.encrypt8(0), { gasLimit: gasLimit });
         console.log('Automatic vote in wolves night for ID 0.');
-        setHasVoted(true);
+        setHasVoted(false);
       } catch (error) {
         console.error('Error in automatic wolves night voting:', error);
       }
