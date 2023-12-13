@@ -14,7 +14,6 @@ interface PlayerCardProps {
 
 const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
   const { contract, phase, player } = useContract();
-  const [ hasVoted, setHasVoted ] = useState<boolean>(false);
   const gasLimit = 4000000;
 
   const handleDailyDebateVote = async () => {
@@ -44,32 +43,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
     }
   };
 
-  useEffect(() => {
-    if (player.role != undefined && !hasVoted) {
-      setHasVoted(true);
-      let isWolf = (player.role == "wolf");
-      // If the phase is wolves_vote and the player is not a wolf and hasn't voted yet, vote automatically
-      if (phase === 'wolves_vote' && !isWolf) {
-        autoVoteForWolvesNight();
-      }
-    }
-
-  }, [phase]);
-
-  const autoVoteForWolvesNight = async () => {
-    if (contract && !hasVoted) {
-      try {
-        let instance: FhevmInstance = getInstance();
-        // Automatically vote for player ID 0
-        await contract.wolvesNight(instance.encrypt8(0), { gasLimit: gasLimit });
-        console.log('Automatic vote in wolves night for ID 0.');
-        setHasVoted(false);
-      } catch (error) {
-        console.error('Error in automatic wolves night voting:', error);
-      }
-    }
-  };
-
   const handleClick = () => {
     if (phase === 'village_vote') {
       handleDailyDebateVote();
@@ -87,11 +60,6 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
       >
       </div>
       <p>{address.slice(0, 10)}</p>
-      <div className="auto vote"
-        onClick={autoVoteForWolvesNight} // Assuming daily debate vote is for all players
-      >
-        <p>auto vote</p>
-      </div>
     </>
   );
 }

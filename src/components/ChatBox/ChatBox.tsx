@@ -20,7 +20,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
   const [newMessage, setNewMessage] = useState<string>('');
   const [address] = useState<string>(playerAddress); // Replace with actual player address
   const chatId = '1341';
-  const api = "http://192.168.163.161:5000";
+  const api = "http://192.168.1.6:5000";
 
 
   // Function to fetch messages

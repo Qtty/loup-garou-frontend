@@ -30,14 +30,15 @@ interface ContractProviderProps {
 export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) => {
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [contract, setContract] = useState<ethers.Contract | null>(null);
-  const [phase, setPhase] = useState<string>('wolves_vote'); // initial phase
+  const [phase, setPhase] = useState<string>('initial_phase'); // initial phase
+  const [hasInitialPhaseCompleted, setHasInitialPhaseCompleted] = useState<boolean>(false);
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState<number>(0);
   const [player, setPlayer] = useState<PlayerData>({} as PlayerData);
 
   // Define your ABI and Contract Address here
   const contractABI = abi;
-  const contractAddress = "0xC35BEf6d840EeaD195Ea2f04967314d26fDcca55";
+  const contractAddress = "0xD271F7FbA88cDB9aEF9BBaf5aAe07A36d975594E";
 
   // Function to update the provider in the context
   const updateProvider = (newProvider: ethers.BrowserProvider | null) => {
@@ -57,21 +58,36 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
     setPlayer(newPlayer);
   }
 
+  const phases = ['wolves_vote', 'break1', 'village_debate', 'village_vote', 'break2'];
+
   type PhaseDurations = {
     [key in 'wolves_vote' | 'break1' | 'village_debate' | 'break2' | 'village_vote']: number;
   };
 
-  useEffect(() => {
-    if (isRegistered) {
-      const phaseDuration: PhaseDurations = {
-        'wolves_vote': 2 * 60 * 1000, // 2 minutes
-        'break1': 30 * 1000,
-        'village_debate': 1 * 60 * 1000, // 5 minutes
-        'village_vote': 2 * 60 * 1000, // 2 minutes
-        'break2': 30 * 1000,
-      };
+  const phaseDuration: PhaseDurations = {
+    'wolves_vote': 2 * 60 * 1000, // 2 minutes
+    'break1': 30 * 1000,
+    'village_debate': 1 * 60 * 1000, // 5 minutes
+    'village_vote': 2 * 60 * 1000, // 2 minutes
+    'break2': 30 * 1000,
+  };
 
-      const phases = ['wolves_vote', 'break1', 'village_debate', 'village_vote', 'break2'];
+  useEffect(() => {
+    if (isRegistered && phase === 'initial_phase' && !hasInitialPhaseCompleted) {
+      const timeoutId = setTimeout(() => {
+        setPhase(phases[0]); // Start the regular phase cycle
+        setHasInitialPhaseCompleted(true); // Mark the initial phase as completed
+      }, 20 * 1000); // Duration of the initial phase
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [isRegistered]);
+
+  useEffect(() => {
+    if (isRegistered && hasInitialPhaseCompleted) {
+      
 
       const nextPhase = () => {
         setCurrentPhaseIndex((currentPhaseIndex + 1) % phases.length);
@@ -85,7 +101,7 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
         clearTimeout(timeoutId);
       };
     }
-  }, [phase, isRegistered]);
+  }, [phase, hasInitialPhaseCompleted]);
 
   return (
     <ContractContext.Provider value={{

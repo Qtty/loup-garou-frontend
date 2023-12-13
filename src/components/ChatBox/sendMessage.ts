@@ -1,4 +1,4 @@
-const api = "http://192.168.163.161:5000"; // API endpoint
+const api = "http://192.168.1.6:5000"; // API endpoint
 
 export const sendMessageUtil = async (chatId: string, playerAddress: string, messageText: string) => {
   try {

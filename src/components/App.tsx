@@ -62,6 +62,4 @@ const App = () => {
 export default App;
 
 // TODO:
-// * auto vote
-// * add a "role acquisition" phase to eliminate the auto vote problem
 // * Add a re-transaction for each failed transaction or increase the gasLimit

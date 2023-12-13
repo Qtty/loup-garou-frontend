@@ -4,6 +4,8 @@ import "./PlayerList.css";
 import { useContract } from '../Context/ContractProvider';
 import {PlayerData} from '../Player';
 import { useNavigate } from 'react-router-dom';
+import { getInstance } from '../../fhevmjs';
+import { FhevmInstance } from 'fhevmjs';
 import "./PlayerList.css";
 
 
@@ -13,6 +15,7 @@ const PlayerList: React.FC = () => {
   const [showPlayerDied, setShowPlayerDied] = useState(false);
   const { contract, phase, player } = useContract();
   const navigate = useNavigate(); // Hook for navigation
+  const gasLimit = 4000000;
 
   // Function to fetch registered players from the contract
   const fetchRegisteredPlayers = async () => {
@@ -32,8 +35,6 @@ const PlayerList: React.FC = () => {
         }));
 
       const filteredPlayerList = playerList.filter((participant: PlayerData) => participant.address != player.address);
-      console.log("player list: " + playerList);
-      console.log('player: ' + player.address);
       setPlayers(filteredPlayerList);
     } catch (error) {
       console.error('Error fetching registered players:', error);
@@ -69,7 +70,7 @@ const PlayerList: React.FC = () => {
 
       console.log('got killed: ' + killedPlayerAddress);
       onPlayerDeath();
-      //await gameEnded();
+      await gameEnded();
     } catch (error) {
       console.error('Error removing killed player:', error);
     }
@@ -106,6 +107,28 @@ const PlayerList: React.FC = () => {
     fetchRegisteredPlayers();
   }, [contract, player]); // Re-run the effect if the contract instance changes
 
+  useEffect(() => {
+    let isWolf = (player.role == "wolf");
+    // If the phase is wolves_vote and the player is not a wolf and hasn't voted yet, vote automatically
+    if (phase == 'wolves_vote' && !isWolf) {
+      autoVoteForWolvesNight();
+    }
+
+  }, [phase]);
+
+  const autoVoteForWolvesNight = async () => {
+    if (contract) {
+      try {
+        let instance: FhevmInstance = getInstance();
+        // Automatically vote for player ID 0
+        await contract.wolvesNight(instance.encrypt8(0), { gasLimit: gasLimit });
+        console.log('Automatic vote in wolves night for ID 0.');
+      } catch (error) {
+        console.error('Error in automatic wolves night voting:', error);
+      }
+    }
+  };
+
   return (
     <>
     {showPlayerDied && (
@@ -113,7 +136,7 @@ const PlayerList: React.FC = () => {
         {playerDiedNotification}
       </div>
     )}
-    {player.role && (<div className="section">
+    {(<div className="section">
       <div className="container">
         <div className="columns is-centered is-multiline">
           {players.map((participant, index) => (

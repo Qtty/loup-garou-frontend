@@ -7,6 +7,7 @@ const StatusBar: React.FC = () => {
 
   // Define the duration for each phase
   const phaseDurations: { [key: string]: number } = {
+    'initial_phase': 20,
     'wolves_vote': 2 * 60, // 2 minutes in seconds
     'break1': 30,
     'village_debate': 1 * 60, // 5 minutes in seconds
