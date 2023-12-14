@@ -7,19 +7,13 @@ import { PlayerData } from "./Player";
 import './Registration.css';
 
 
-// Define the shape of props expected by the Registration component
-interface RegistrationProps {
-  updateRegistration: (isRegistered: boolean) => void;
-  updatePlayer: (playerData: PlayerData) => void;
-}
-
-const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updatePlayer }) => {
+const Registration: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isWaitingForTx, setIsWaitingForTx] = useState(false);
   const [playersLeft, setPlayersLeft] = useState<number | null>(null);
   const [registrationError, setRegistrationError] = useState<string>('');
 
-  const { contract, contractABI, contractAddress, setProvider, setContract, setIsRegistered } = useContract();
+  const { contract, contractABI, contractAddress, setProvider, setContract, setIsRegistered, setPlayer } = useContract();
 
   useEffect(() => {
     const fetchPlayerCount = async () => {
@@ -32,7 +26,6 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
           setPlayersLeft(playerCount);
           if (playerCount == 0) {
             console.log("all registered");
-            updateRegistration(true);
             setIsRegistered(true);
           }
         } catch (error) {
@@ -73,7 +66,7 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
             id: 0
           };
 
-          updatePlayer(playerData);
+          setPlayer(playerData);
           setIsLoading(true);
         }
         else {

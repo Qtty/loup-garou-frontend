@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PlayerCard from "../PlayerCard/PlayerCard";
-import "./PlayerList.css";
 import { useContract } from '../Context/ContractProvider';
 import {PlayerData} from '../Player';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +12,8 @@ const PlayerList: React.FC = () => {
   const [players, setPlayers] = useState<PlayerData[]>([]);
   const [playerDiedNotification, setPlayerDiedNotification] = useState('');
   const [showPlayerDied, setShowPlayerDied] = useState(false);
-  const { contract, phase, player } = useContract();
+  const { contract, phase, player, gasLimit } = useContract();
   const navigate = useNavigate(); // Hook for navigation
-  const gasLimit = 4000000;
 
   // Function to fetch registered players from the contract
   const fetchRegisteredPlayers = async () => {
@@ -141,7 +139,7 @@ const PlayerList: React.FC = () => {
         <div className="columns is-centered is-multiline">
           {players.map((participant, index) => (
             <div className="column is-narrow" key={index}>
-              <PlayerCard address={participant.address} status={participant.status} id={participant.id}/>
+              <PlayerCard address={participant.address} id={participant.id}/>
             </div>
           ))}
         </div>

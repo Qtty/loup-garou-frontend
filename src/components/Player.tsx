@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useContract } from "./Context/ContractProvider";
 import { getTokenSignature, getInstance } from '../fhevmjs';
-
-// Define the shape of the props using an interface
-interface PlayerProps {
-  initialAddress: string;
-  initialRole?: string; // Use '?' to mark the property as optional if it can be undefined
-  initialStatus: boolean;
-}
 
 // Interface for player data defined
 export interface PlayerData {
@@ -27,24 +20,22 @@ const roles: RoleDictionary = {
   3: "sorcerer"
 };
 
-const Player: React.FC<PlayerProps> = ({ initialAddress, initialRole = '', initialStatus }) => {
-  const [address] = useState<string>(initialAddress);
-  const [status] = useState<boolean>(initialStatus);
+const Player: React.FC = () => {
   const { contract, contractAddress, setPlayer, player } = useContract();
 
   const getRole = async () => {
-    if (contract && player.role == undefined) {
+    if (contract && player.role == "") {
       try {
-        const { signature, publicKey } = await getTokenSignature(contractAddress, address);
+        const { signature, publicKey } = await getTokenSignature(contractAddress, player.address);
         var fetchedRole = await contract.getRole(publicKey, signature);
         var plainRole = getInstance().decrypt(contractAddress, fetchedRole);
-        const player: PlayerData = {
-          address: address,
+        const updatedPlayer: PlayerData = {
+          address: player.address,
           role: roles[plainRole],
-          status: status,
-          id: 0,
+          status: player.status,
+          id: player.id,
         }
-        setPlayer(player);
+        setPlayer(updatedPlayer);
       } catch (error) {
         console.error("Error fetching player role:", error);
       }
@@ -56,10 +47,7 @@ const Player: React.FC<PlayerProps> = ({ initialAddress, initialRole = '', initi
   }, []); // Dependencies array should include all values from the component scope used in the effect
 
   return (
-    <div className="player">
-      <p>Role: {player.role || "Waiting for role"}</p>
-      {/* Interactive elements here */}
-    </div>
+    <div className="player"></div>
   );
 };
 

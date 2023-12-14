@@ -17,6 +17,9 @@ interface IContractContext {
   setContract: (newContract: ethers.Contract | null) => void;
   isRegistered: boolean;
   setIsRegistered: (registeredValue: boolean) => void;
+  gasLimit: number;
+  api: string;
+  chatId: string;
 }
 
 // Define the shape of your context state
@@ -35,10 +38,13 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState<number>(0);
   const [player, setPlayer] = useState<PlayerData>({} as PlayerData);
+  const [chatId, setChatId] = useState<string>("1341");
+  const gasLimit = 4000000;
+  const api = "http://192.168.1.6:5000";
 
   // Define your ABI and Contract Address here
   const contractABI = abi;
-  const contractAddress = "0x546C004Dd1703d7BAAaf5b116959636F5D7B75f6";
+  const contractAddress = "0x6e5F143C6e1Df388666F0F020aAC3B73C7134692";
 
   // Function to update the provider in the context
   const updateProvider = (newProvider: ethers.BrowserProvider | null) => {
@@ -115,7 +121,10 @@ export const ContractProvider: React.FC<ContractProviderProps> = ({ children }) 
         setProvider: updateProvider,
         setContract: updateContract,
         isRegistered,
-        setIsRegistered: updateIsRegistered
+        setIsRegistered: updateIsRegistered,
+        gasLimit,
+        api,
+        chatId
       }}
     >
       {children}

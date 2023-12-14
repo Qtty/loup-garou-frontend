@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./ChatBox.css";
 import { sendMessageUtil } from './sendMessage';
-
-
-// Define the shape of the props using an interface
-interface ChatBoxProps {
-  playerAddress: string;
-}
+import { useContract } from '../Context/ContractProvider';
 
 // Define the shape of a message
 interface Message {
@@ -15,12 +10,10 @@ interface Message {
   message: string;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
+const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>('');
-  const [address] = useState<string>(playerAddress); // Replace with actual player address
-  const chatId = '1341';
-  const api = "http://192.168.1.6:5000";
+  const { player, api, chatId } = useContract();
 
 
   // Function to fetch messages
@@ -76,36 +69,36 @@ const ChatBox: React.FC<ChatBoxProps> = ({ playerAddress}) => {
     event.preventDefault();
     if (!newMessage.trim()) return;
 
-    await sendMessageUtil(chatId, address, newMessage);
+    await sendMessageUtil(api, chatId, player.address, newMessage);
     setNewMessage('');
   };
 
   return (
     <div className="chat-box column is-one-quarter" style={{ height: '100vh', position: 'fixed', right: 0, top: 0, }}>
-  <div className="box" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-    <div className="messages" style={{ overflowY: 'auto', flexGrow: 1 }}>
-      {messages.map((message, index) => (
-        <div key={index} className="message">
-          <strong>{message.sender.slice(0, 10)}:</strong> {message.message}
+      <div className="box" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div className="messages" style={{ overflowY: 'auto', flexGrow: 1 }}>
+          {messages.map((message, index) => (
+            <div key={index} className="message">
+              <strong>{message.sender.slice(0, 10)}:</strong> {message.message}
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-    <div className="field has-addons">
-      <div className="control is-expanded">
-        <input
-          className="input"
-          type="text"
-          value={newMessage}
-          onChange={handleNewMessageChange}
-          placeholder="Type a message..."
-        />
+        <div className="field has-addons">
+          <div className="control is-expanded">
+            <input
+              className="input"
+              type="text"
+              value={newMessage}
+              onChange={handleNewMessageChange}
+              placeholder="Type a message..."
+            />
+          </div>
+          <div className="control">
+            <button className="button is-info" onClick={handleSendMessage}>Send</button>
+          </div>
+        </div>
       </div>
-      <div className="control">
-        <button className="button is-info" onClick={handleSendMessage}>Send</button>
-      </div>
     </div>
-  </div>
-</div>
 
   );
 };

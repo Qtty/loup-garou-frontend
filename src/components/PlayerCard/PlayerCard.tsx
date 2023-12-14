@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import "./PlayerCard.css";
 import { useContract } from '../Context/ContractProvider';
 import { getInstance } from '../../fhevmjs';
@@ -8,21 +8,19 @@ import "./PlayerCard.css";
 
 interface PlayerCardProps {
   address: string;  // Assuming this represents the player's ID
-  status: boolean;  // This assumes status can only be "Alive" or "Dead"
   id: number; // The ID of the player, this'll be used for boting
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ address, status, id }) => {
-  const { contract, phase, player } = useContract();
-  const gasLimit = 4000000;
+const PlayerCard: React.FC<PlayerCardProps> = ({ address, id }) => {
+  const { contract, phase, player, gasLimit, api, chatId } = useContract();
 
   const handleDailyDebateVote = async () => {
     if (contract) {
       try {
         // Call the dailyDebate method of your contract
-        await contract.dailyDebate(id);
+        await contract.dailyDebate(id, { gasLimit: gasLimit });
         console.log(`Voted in daily debate for: ${id}`);
-        await sendMessageUtil("1341", player.address, `Voted in daily debate for ${address.slice(0, 10)}`);
+        await sendMessageUtil(api, chatId, player.address, `Voted in daily debate for ${address.slice(0, 10)}`);
       } catch (error) {
         console.error('Error in dailyDebate voting:', error);
       }

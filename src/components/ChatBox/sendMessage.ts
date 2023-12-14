@@ -1,6 +1,4 @@
-const api = "http://192.168.1.6:5000"; // API endpoint
-
-export const sendMessageUtil = async (chatId: string, playerAddress: string, messageText: string) => {
+export const sendMessageUtil = async (api: string, chatId: string, playerAddress: string, messageText: string) => {
   try {
     const response = await fetch(`${api}/send_message`, {
       method: 'POST',
