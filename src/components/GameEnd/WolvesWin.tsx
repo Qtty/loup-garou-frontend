@@ -7,7 +7,7 @@ const EndGameMessage = () => {
     const { player } = useContract();
     const isWolf = player.role == 'wolf';
     const messageRoleClass = isWolf ? 'win-message' : 'lost-message';
-    const message = isWolf ? 'Congratulations, Wolves Win!' : 'Sorry, Wolves Win!';
+    const message = isWolf ? 'Congratulations, Wolves Win!' : 'Oooooops, Wolves Win :(';
   
     return (
     <section className="hero is-fullheight">

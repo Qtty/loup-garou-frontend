@@ -17,6 +17,7 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isWaitingForTx, setIsWaitingForTx] = useState(false);
   const [playersLeft, setPlayersLeft] = useState<number | null>(null);
+  const [registrationError, setRegistrationError] = useState<string>('');
 
   const { contract, contractABI, contractAddress, setProvider, setContract, setIsRegistered } = useContract();
 
@@ -60,30 +61,40 @@ const Registration: React.FC<RegistrationProps> = ({ updateRegistration, updateP
         const tx = await newContract.registerForGame();
         setIsWaitingForTx(true);
         console.log("Transaction sent:", tx.hash);
-        await tx.wait();
-        console.log("Registered for game");
+        let receipt = await tx.wait();
         setIsWaitingForTx(false);
+        if (receipt.status == 1) {
+          console.log("Registered for game");
 
-        const playerData: PlayerData = {
-          address: await signer.getAddress(),
-          role: "",
-          status: true,
-          id: 0
-        };
+          const playerData: PlayerData = {
+            address: await signer.getAddress(),
+            role: "",
+            status: true,
+            id: 0
+          };
 
-        updatePlayer(playerData);
-        setIsLoading(true);
+          updatePlayer(playerData);
+          setIsLoading(true);
+        }
+        else {
+          setRegistrationError('Transaction failed, please try again.');
+        }
       } catch (error) {
-        console.error("Could not connect to MetaMask:", error);
+        setRegistrationError('Could not connect to MetaMask');
       }
     } else {
-      console.error("Please install MetaMask to continue.");
+      setRegistrationError("Please install MetaMask to continue.");
     }
   };
 
   return (
     <div className="registration-background">
       <div className="container registration-box">
+        {registrationError && (
+            <div className="transaction-notification">
+              {registrationError}
+            </div>
+        )}
         {isWaitingForTx ? (
           <div className="notification">
             Waiting for transaction...

@@ -1,0 +1,24 @@
+.title, .subtitle {
+  color: #E0FFFF; /* Light cyan color for better visibility */
+  text-shadow: 2px 2px 4px #000; /* Soft black shadow to enhance readability */
+}
+  
+.game-over .button {
+  background-color: #f5c518; /* Warm button color */
+  border-color: #d7a306; /* Slightly darker border for the button */
+  color: #fff; /* White text for the button */
+}
+
+.game-over .button:hover {
+  background-color: #ffd700; /* Brighter color on hover */
+}
+
+.game-over-background {
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
