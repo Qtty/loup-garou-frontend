@@ -1,4 +1,3 @@
-// WolvesWin.tsx or VillagersWin.tsx
 import { useContract } from '../Context/ContractProvider';
 import "./GameEnd.css";
 

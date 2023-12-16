@@ -1,4 +1,3 @@
-// Import types for your contract methods and any props
 import { useContract } from "./Context/ContractProvider";
 import { BrowserProvider, Contract } from "ethers";
 import React, { useState, useEffect } from "react";
@@ -20,7 +19,6 @@ const Registration: React.FC = () => {
       if (contract && isLoading) {
         try {
           await createFhevmInstance();
-          // Ensure getPlayersLeftToRegister is defined in your contract type
           const playerCount: number = await contract.getPlayersLeftToRegister();
           console.log(`players left: ${playerCount}`);
           setPlayersLeft(playerCount);

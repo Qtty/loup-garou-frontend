@@ -36,7 +36,3 @@ const App = () => {
 };
 
 export default App;
-
-// TODO:
-// * Add a re-transaction for each failed transaction or increase the gasLimit
-// * Enter in the chat
