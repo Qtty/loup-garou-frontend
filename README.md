@@ -1,5 +1,7 @@
 # Werewolf Game Frontend Documentation
 
+![Werewolf Ethereum Integration](public/md_wallpaper.png)
+
 ## Introduction
 
 This document provides an in-depth guide to the frontend implementation of the Werewolf Game, a blockchain-based adaptation of the classic social deduction game. Our frontend interface is designed to provide a seamless and interactive experience for players, complementing the secure and transparent backend built on blockchain technology.
