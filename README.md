@@ -43,6 +43,43 @@ The frontend is crucial for player engagement, offering an intuitive and visuall
     ```bash
     npm build
     ```
+## Chat Server Setup
+
+### Overview
+
+Alongside the frontend and smart contract, our project includes a small chat server written in Flask. This server handles real-time messaging for the game, allowing players to communicate during gameplay.
+
+### Setting Up the Chat Server
+
+#### Prerequisites
+
+- Python installed on your machine.
+
+#### Steps
+
+1. **Navigate to the Chat Server Directory**:
+    ```bash
+    cd chat-server
+    ```
+2. **Create a new Virtual Env for Python3**:
+    ```bash
+    python3 -m venv venv
+    ```
+3. **Activate the Virtual Environment**:
+    ```bash
+    source venv/bin/activate
+    ```
+4. **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+5. **Launch the Chat Server**:
+    ```bash
+    python chat.py
+    ```
+
+This section provides clear instructions on how to set up the Flask-based chat server, ensuring users can easily integrate it with the rest of the project components.
+
 ## Frontend Components Breakdown
 
 ### Introduction to Frontend Architecture
