@@ -43,6 +43,32 @@ The frontend is crucial for player engagement, offering an intuitive and visuall
     ```bash
     npm build
     ```
+
+### Configuration Adjustments in ContractProvider
+
+#### Updating API and Contract Address
+
+For the frontend application to function correctly, it's crucial to update the `api` and `contractAddress` values in the `Context/ContractProvider.tsx` file with the correct endpoints.
+
+##### Steps to Update:
+
+1. **Locate the `ContractProvider.tsx` File**:
+   - Navigate to the `Context` directory in your project and open the `ContractProvider.tsx` file.
+
+2. **Update API Endpoint**:
+   - Find the line where the `api` variable is defined.
+   - Replace its value with the URL of your Flask chat server or the relevant API endpoint.
+
+3. **Update Contract Address**:
+   - Locate the `contractAddress` variable.
+   - Change its value to the deployed address of your smart contract on the Ethereum blockchain.
+
+##### Importance of Accurate Configuration:
+- Ensuring that these values are correct is vital for the frontend to communicate effectively with the backend and the smart contract.
+- Incorrect values may lead to failure in fetching data, sending messages, or interacting with the smart contract.
+
+*After making these updates, your frontend application should be correctly configured to interact with your backend services and the Ethereum blockchain.*
+
 ## Chat Server Setup
 
 ### Overview
